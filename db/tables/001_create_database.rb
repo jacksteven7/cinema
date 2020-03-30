@@ -1,5 +1,5 @@
 require 'sequel'
-DB = Sequel.connect(adapter: 'postgres', host: 'localhost', database: 'cinema_development')
+DB = Sequel.connect(adapter: 'postgres', database: 'cinema_development')
 DB.create_table :movies do
   primary_key :movie_id
   String :title
