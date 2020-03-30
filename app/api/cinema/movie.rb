@@ -20,13 +20,13 @@ module Cinema
       end
 
       post "movie/:id/reservation" do
-        movie = DB[:movies].where(id: params[:id]).first
+        movie = DB[:movies].where(movie_id: params[:id]).first
         return { status: "401", message: "Movie not found" } if movie.nil?
 
         reservations = DB[:reservations]
         rdate = Date.parse(params[:rdate])
         persons = params[:persons].to_i
-        person_in_reservation = reservations.where(rdate: rdate,movie_id: movie[:id]).sum(:persons).to_i
+        person_in_reservation = reservations.where(rdate: rdate,movie_id: movie[:movie_id]).sum(:persons).to_i
         reservation_day = Date::DAYNAMES[rdate.wday]
         
         if rdate < Date.today

@@ -12,7 +12,7 @@ describe 'Cinema tests', type: :request do
       }
       post "/api/v1/cinema/movie", params: params
 
-      @movie = DB[:movies].order(:id).last
+      @movie = DB[:movies].order(:movie_id).last
     end
 
     it "Create reservation successfully" do
@@ -20,7 +20,7 @@ describe 'Cinema tests', type: :request do
         rdate: "21-12-2030",
         persons: 6
       }
-      post "/api/v1/cinema/movie/#{@movie[:id]}/reservation", params: params
+      post "/api/v1/cinema/movie/#{@movie[:movie_id]}/reservation", params: params
       
       expect(response.status).to eq 201
       expect(response.body).to include "Reservation created successfully"
@@ -31,7 +31,7 @@ describe 'Cinema tests', type: :request do
         rdate: "21-12-2030",
         persons: 6
       }
-      post "/api/v1/cinema/movie/#{@movie[:id]}/reservation", params: params
+      post "/api/v1/cinema/movie/#{@movie[:movie_id]}/reservation", params: params
       
       expect(response.status).to eq 201
       expect(response.body).to include "Reservation unsuccessfully, only 4 seats for this movie"
@@ -42,7 +42,7 @@ describe 'Cinema tests', type: :request do
         rdate: "21-12-2010",
         persons: 6
       }
-      post "/api/v1/cinema/movie/#{@movie[:id]}/reservation", params: params
+      post "/api/v1/cinema/movie/#{@movie[:movie_id]}/reservation", params: params
       
       expect(response.status).to eq 201
       expect(response.body).to include "Wrong reservation date, only future functions"
