@@ -16,7 +16,7 @@ module Cinema
       post "movie" do
         movies = DB[:movies]
         movies.insert(:title => params[:title], :description => params[:description], :url => params[:url], :days => params[:days].join("|"))
-        { status: "Movie #{params[:title]} created" }
+        { status: "201", message:  "Movie #{params[:title]} created" }
       end
 
       post "movie/:id/reservation" do
@@ -25,12 +25,12 @@ module Cinema
 
         reservations = DB[:reservations]
         rdate = Date.parse(params[:rdate])
-        persons = params[:persons]
-        person_in_reservation = reservations.where(rdate: rdate).sum(:persons).to_i
+        persons = params[:persons].to_i
+        person_in_reservation = reservations.where(rdate: rdate,movie_id: movie[:id]).sum(:persons).to_i
         reservation_day = Date::DAYNAMES[rdate.wday]
-
+        
         if rdate < Date.today
-          { status: "401", message: "Reservation date should be a valid date" }
+          { status: "401", message: "Wrong reservation date, only future functions" }
         elsif movie[:days].exclude? reservation_day
           { status: "401", message: "#{movie[:title]} is not available on #{reservation_day}s" }
         elsif persons + person_in_reservation > Orm::Reservation::CINEMA_LIMIT #Exceeds the limit of the cinema
